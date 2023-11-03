@@ -27,9 +27,7 @@ const optionSelectSetter = (select, evt) => {
   const value = evt.target.value;
   for (const option of options) {
     if (option.value === value) {
-      option.setAttribute('selected', true);
-    } else {
-      option.removeAttribute('selected');
+      option.selected = true;
     }
   }
 };

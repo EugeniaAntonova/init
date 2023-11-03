@@ -12,34 +12,25 @@ const userAvatarPreview = document.querySelector('.ad-form-header__preview');
 const placePhotoInput = document.querySelector('.ad-form__input');
 const placePhotoPreview = document.querySelector('.ad-form__photo');
 
-// getting avatar file input and iserting it into preview
-
-const readFileAvatar = (input) => {
+const readFile = (inputName, input, previewPlace) => {
   const file = input.files[0];
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = (evt) => {
-    userAvatarPreview.innerHTML = `<img src="${evt.target.result}" alt="Аватар пользователя" width="40" height="44">`;
+    const preview =
+    inputName === 'userAvatarInput' ?
+      `<img src="${evt.target.result}" alt="Аватар пользователя" width="40" height="44">` :
+      `<img src="${evt.target.result}" alt="Фото жилья" width="70" height="70">`;
+    previewPlace.innerHTML = preview;
   };
 };
 
 userAvatarInput.addEventListener('input', () => {
-  readFileAvatar(userAvatarInput);
+  readFile('userAvatarInput', userAvatarInput, userAvatarPreview);
 });
 
-// getting place file input and iserting it into preview
-
-const readFilePlace = (input) => {
-  const file = input.files[0];
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = (evt) => {
-    placePhotoPreview.innerHTML = `<img src="${evt.target.result}" alt="Фото жилья" width="70" height="70">`;
-  };
-};
-
 placePhotoInput.addEventListener('input', () => {
-  readFilePlace(placePhotoInput);
+  readFile('placePhotoInput', placePhotoInput, placePhotoPreview);
 });
 
 // form conditions controls
@@ -76,34 +67,40 @@ enableForms();
 const typeInput = document.getElementById('type');
 const priceInput = document.getElementById('price');
 
-const priceForPlace = (type, price) => {
-  switch(type) {
-    case 'bungalow':
-      price.setAttribute('min', '0');
-      price.setAttribute('placeholder', 'от 0');
-      break;
-    case 'flat':
-      price.setAttribute('min', '1000');
-      price.setAttribute('placeholder', 'от 1000');
-      break;
-    case 'hotel':
-      price.setAttribute('min', '3000');
-      price.setAttribute('placeholder', 'от 3000');
-      break;
-    case 'house':
-      price.setAttribute('min', '5000');
-      price.setAttribute('placeholder', 'от 5000');
-      break;
-    case 'palace':
-      price.setAttribute('min', '10000');
-      price.setAttribute('placeholder', 'от 10000');
-      break;
+const params = {
+  bungalow: {
+    'min': '0',
+    'placeholder': 'от 0'
+  },
+  flat: {
+    'min': '1000',
+    'placeholder': 'от 1000'
+  },
+  hotel: {
+    'min': '3000',
+    'placeholder': 'от 3000'
+  },
+  house: {
+    'min': '5000',
+    'placeholder': 'от 5000'
+  },
+  palace: {
+    'min': '10000',
+    'placeholder': 'от 10 000'
   }
+
+};
+
+const getParamsValue = (type, price) => {
+  const value = params[type];
+  Object.keys(value).forEach((key) => {
+    price.setAttribute(key, value[key]);
+  });
 };
 
 typeInput.addEventListener('input', (evt) => {
   optionSelectSetter(typeInput, evt);
-  priceForPlace(typeInput.value, priceInput);
+  getParamsValue(typeInput.value, priceInput);
 });
 
 // ---------- setting default values
@@ -121,17 +118,6 @@ priceInput.setAttribute('min', '1000');
 // check-in and check-out time connection
 const checkInTimeInput = document.getElementById('timein');
 const checkOutTimeInput = document.getElementById('timeout');
-
-// const synchronizeTime = (chosenTime, synchronisedTime) => {
-//   const options = synchronisedTime.options;
-//   for (let i = 0; i < options.length; i++) {
-//     if (options[i].value === chosenTime) {
-//       options[i].setAttribute('selected', 'true');
-//     } else {
-//       options[i].removeAttribute('selected');
-//     }
-//   }
-// };
 
 checkInTimeInput.addEventListener('input', (evt) => {
   optionSelectSetter(checkInTimeInput, evt);
@@ -160,11 +146,8 @@ const hasEnoughRoom = (rooms, guests) => {
 
 roomsInput.addEventListener('input', (evt) => {
   optionSelectSetter(roomsInput, evt);
-  console.log(hasEnoughRoom(roomsInput.value, guestsInput.value));
-
-})
+});
 
 guestsInput.addEventListener('input', (evt) => {
   optionSelectSetter(guestsInput, evt);
-  console.log(hasEnoughRoom(roomsInput.value, guestsInput.value));
 });
