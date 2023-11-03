@@ -32,4 +32,29 @@ const optionSelectSetter = (select, evt) => {
   }
 };
 
-export {getRandomInteger, getRandomFloat, optionSelectSetter};
+
+const params = {
+  bungalow: {
+    'min': '0',
+    'placeholder': 'от 0'
+  },
+  flat: {
+    'min': '1000',
+    'placeholder': 'от 1000'
+  },
+  hotel: {
+    'min': '3000',
+    'placeholder': 'от 3000'
+  },
+  house: {
+    'min': '5000',
+    'placeholder': 'от 5000'
+  },
+  palace: {
+    'min': '10000',
+    'placeholder': 'от 10 000'
+  }
+
+};
+
+export {getRandomInteger, getRandomFloat, optionSelectSetter, params};

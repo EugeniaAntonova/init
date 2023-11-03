@@ -1,4 +1,4 @@
-import { optionSelectSetter } from './utils.js';
+import { optionSelectSetter, params } from './utils.js';
 const form = document.querySelector('.ad-form');
 const formElements = form.querySelectorAll('fieldset');
 // const slider = form.querySelector('.ad-form__slider');
@@ -12,6 +12,8 @@ const userAvatarPreview = document.querySelector('.ad-form-header__preview');
 const placePhotoInput = document.querySelector('.ad-form__input');
 const placePhotoPreview = document.querySelector('.ad-form__photo');
 
+
+// ---------------------reading files and uploading preview
 const readFile = (inputName, input, previewPlace) => {
   const file = input.files[0];
   const reader = new FileReader();
@@ -25,12 +27,67 @@ const readFile = (inputName, input, previewPlace) => {
   };
 };
 
-userAvatarInput.addEventListener('input', () => {
+const onUserAvatarInput = () => {
   readFile('userAvatarInput', userAvatarInput, userAvatarPreview);
+};
+const onPlacePhotoInput = () => {
+  readFile('placePhotoInput', placePhotoInput, placePhotoPreview);
+};
+
+// type of placement and price connection
+
+const typeInput = document.getElementById('type');
+const priceInput = document.getElementById('price');
+
+const getParamsValue = (type, price) => {
+  const value = params[type];
+  Object.keys(value).forEach((key) => {
+    price.setAttribute(key, value[key]);
+  });
+};
+
+const onTypeInputChange = (evt) => {
+  optionSelectSetter(typeInput, evt);
+  getParamsValue(typeInput.value, priceInput);
+};
+
+// check-in and check-out time connection
+
+const checkInTimeInput = document.getElementById('timein');
+const checkOutTimeInput = document.getElementById('timeout');
+
+const onCheckInTimeInputChange = (evt) => {
+  optionSelectSetter(checkOutTimeInput, evt);
+  optionSelectSetter(checkInTimeInput, evt);
+};
+const onCheckOutTimeInputChange = (evt) => {
+  optionSelectSetter(checkOutTimeInput, evt);
+  optionSelectSetter(checkInTimeInput, evt);
+};
+
+// rooms and guests amount connection
+
+const roomsInput = document.querySelector('#room_number');
+const guestsInput = document.querySelector('#capacity');
+
+// const hasEnoughRoom = (rooms, guests) => {
+//   rooms = Number(rooms);
+//   guests = Number(guests);
+//   let enough = false;
+//   if ((rooms === 100 && guests !== 0)) {
+//     enough = false;
+//   } else if(guests <= rooms) {
+//     enough = true;
+//   }
+//   return enough;
+// };
+
+roomsInput.addEventListener('input', (evt) => {
+  optionSelectSetter(roomsInput, evt);
 });
 
-placePhotoInput.addEventListener('input', () => {
-  readFile('placePhotoInput', placePhotoInput, placePhotoPreview);
+guestsInput.addEventListener('input', (evt) => {
+  optionSelectSetter(guestsInput, evt);
 });
 
 // form conditions controls
@@ -47,8 +104,6 @@ const disableForms = () => {
   mapFieldset.setAttribute('disabled', 'disabled');
 };
 
-disableForms();
-
 const enableForms = () => {
   form.classList.remove('ad-form--disabled');
   formElements.forEach((formElement) => {
@@ -59,95 +114,32 @@ const enableForms = () => {
     select.removeAttribute('disabled');
   });
   mapFieldset.removeAttribute('disabled');
-};
 
-enableForms();
+  // ---------uploading previews
 
-// type of placement and price connection
-const typeInput = document.getElementById('type');
-const priceInput = document.getElementById('price');
+  userAvatarInput.addEventListener('input', onUserAvatarInput);
 
-const params = {
-  bungalow: {
-    'min': '0',
-    'placeholder': 'от 0'
-  },
-  flat: {
-    'min': '1000',
-    'placeholder': 'от 1000'
-  },
-  hotel: {
-    'min': '3000',
-    'placeholder': 'от 3000'
-  },
-  house: {
-    'min': '5000',
-    'placeholder': 'от 5000'
-  },
-  palace: {
-    'min': '10000',
-    'placeholder': 'от 10 000'
+  placePhotoInput.addEventListener('input', onPlacePhotoInput);
+
+  // ---------- setting default values
+
+  const types = typeInput.options;
+  for (const type of types) {
+    if (type.value === 'flat') {
+      type.setAttribute('selected', 'true');
+    }
   }
 
+  priceInput.setAttribute('placeholder', 'от 1000');
+  priceInput.setAttribute('min', '1000');
+  // ----------type of placing and price connection
+
+  typeInput.addEventListener('input', onTypeInputChange );
+
+  //-------- check-in-out times connection
+
+  checkInTimeInput.addEventListener('input', onCheckInTimeInputChange );
+  checkOutTimeInput.addEventListener('input', onCheckOutTimeInputChange);
 };
 
-const getParamsValue = (type, price) => {
-  const value = params[type];
-  Object.keys(value).forEach((key) => {
-    price.setAttribute(key, value[key]);
-  });
-};
-
-typeInput.addEventListener('input', (evt) => {
-  optionSelectSetter(typeInput, evt);
-  getParamsValue(typeInput.value, priceInput);
-});
-
-// ---------- setting default values
-
-const types = typeInput.options;
-for (const type of types) {
-  if (type.value === 'flat') {
-    type.setAttribute('selected', 'true');
-  }
-}
-
-priceInput.setAttribute('placeholder', 'от 1000');
-priceInput.setAttribute('min', '1000');
-
-// check-in and check-out time connection
-const checkInTimeInput = document.getElementById('timein');
-const checkOutTimeInput = document.getElementById('timeout');
-
-checkInTimeInput.addEventListener('input', (evt) => {
-  optionSelectSetter(checkInTimeInput, evt);
-  optionSelectSetter(checkOutTimeInput, evt);
-});
-checkOutTimeInput.addEventListener('input', (evt) => {
-  optionSelectSetter(checkOutTimeInput, evt);
-  optionSelectSetter(checkInTimeInput, evt);
-});
-
-// rooms and guests amount connection
-const roomsInput = document.querySelector('#room_number');
-const guestsInput = document.querySelector('#capacity');
-
-const hasEnoughRoom = (rooms, guests) => {
-  rooms = Number(rooms);
-  guests = Number(guests);
-  let enough = false;
-  if ((rooms === 100 && guests !== 0)) {
-    enough = false;
-  } else if(guests <= rooms) {
-    enough = true;
-  }
-  return enough;
-};
-
-roomsInput.addEventListener('input', (evt) => {
-  optionSelectSetter(roomsInput, evt);
-});
-
-guestsInput.addEventListener('input', (evt) => {
-  optionSelectSetter(guestsInput, evt);
-});
+export {enableForms, disableForms};
