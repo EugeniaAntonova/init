@@ -32,6 +32,13 @@ const optionSelectSetter = (select, evt) => {
   }
 };
 
+const typesDictionary = {
+  'flat': 'Квартира',
+  'bungalow': 'Бунгало',
+  'house': 'Дом',
+  'palace': 'Дворец',
+  'hotel': 'Отель'
+};
 
 const params = {
   bungalow: {
@@ -54,7 +61,6 @@ const params = {
     'min': '10000',
     'placeholder': 'от 10 000'
   }
-
 };
 
-export {getRandomInteger, getRandomFloat, optionSelectSetter, params};
+export {getRandomInteger, getRandomFloat, optionSelectSetter, params, typesDictionary};
