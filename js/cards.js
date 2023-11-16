@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
-const cardContainer = document.querySelector('#map-canvas');
+// const cardContainer = document.querySelector('#map-canvas');
 
 const getOffer = ({offer, author}) => {
   const typesDictionary = {
@@ -46,11 +46,11 @@ const getOffer = ({offer, author}) => {
   return newOffer;
 };
 
-const renderOffer = (offers) => {
-  const offerFragment = document.createDocumentFragment();
-  const offer = getOffer(offers[0]);
-  offerFragment.appendChild(offer);
-  cardContainer.appendChild(offerFragment);
-};
+// const renderOffer = (offers) => {
+//   const offerFragment = document.createDocumentFragment();
+//   const offer = getOffer(offers[0]);
+//   offerFragment.appendChild(offer);
+//   cardContainer.appendChild(offerFragment);
+// };
 
-export {renderOffer};
+export { getOffer};

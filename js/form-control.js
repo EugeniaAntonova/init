@@ -98,7 +98,7 @@ const onFormSubmit = (evt) => {
   pristine.validate();
 };
 
-// ---------------------reading files and uploading preview
+// --------------------------------------------------reading files and uploading preview
 const readFile = (inputName, input, previewPlace) => {
   const file = input.files[0];
   const reader = new FileReader();
@@ -119,12 +119,46 @@ const onPlacePhotoInput = () => {
   readFile('placePhotoInput', placePhotoInput, placePhotoPreview);
 };
 
+// ----------------------------------------------------------------------slider
+
+const priceSlider = document.querySelector('.ad-form__slider');
+
+noUiSlider.create(priceSlider, {
+  start: 1000,
+  step: 1,
+  range: {
+    min: 0,
+    max: 100000
+  },
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return parseFloat(value);
+    }
+  }
+}
+);
+
+priceSlider.noUiSlider.on('update', () => {
+  priceInput.value = priceSlider.noUiSlider.get();
+}
+);
+
 //----------------------------------------------------------------------- type of placement and price connection
 
 const getParamsValue = (type, price) => {
   const value = params[type];
   Object.keys(value).forEach((key) => {
     price.setAttribute(key, value[key]);
+    priceSlider.noUiSlider.updateOptions({
+      start: value.min,
+      range: {
+        min: parseInt(value.min, 10),
+        max: 100000
+      }
+    });
   });
 };
 
@@ -198,9 +232,14 @@ const enableForms = () => {
 
   priceInput.setAttribute('placeholder', 'от 1000');
   priceInput.setAttribute('min', '1000');
+  priceSlider.noUiSlider.set(1000);
   // -------------------------------------------------------type of placing and price connection
 
   typeInput.addEventListener('input', onTypeInputChange );
+
+  priceInput.addEventListener('input', () => {
+    priceSlider.noUiSlider.set(priceInput.value);
+  });
 
   //----------------------------------------------------------- check-in-out times connection
 

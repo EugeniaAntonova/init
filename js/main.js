@@ -1,8 +1,7 @@
-import { renderOffer } from './cards.js';
-import { adsArray } from './data.js';
-import {enableForms } from './form-control.js';
+import { disableForms } from './form-control.js';
+import makeMap from './map-control.js';
 
-renderOffer(adsArray());
-enableForms();
+disableForms();
+makeMap();
 
 
